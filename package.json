@@ -1,0 +1,26 @@
+{
+  "name": "api-mongo-fikani",
+  "version": "1.0.0",
+  "main": "./src/index.js",
+  "license": "MIT",
+  "private": true,
+  "bugs": {
+    "email": "info@onemediamoz.com",
+    "url": "https://github.com/ONE-MEDIA-SA/api-mongo-fikani/issues"
+  },
+  "engines": {
+    "node": "17.1.0",
+    "yarn": "1.22.18",
+    "npm": "8.1.4"
+  },
+  "repository": {
+    "directory": "https://github.com/ONE-MEDIA-SA/api-mongo-fikani",
+    "url": "git@github.com:ONE-MEDIA-SA/api-mongo-fikani.git",
+    "type": "git"
+  },
+  "author": {
+    "email": "info@onemediamoz.com",
+    "name": "OneMedia SA",
+    "url": "https://onemediamoz.com"
+  }
+}
