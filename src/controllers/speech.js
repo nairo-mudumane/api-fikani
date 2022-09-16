@@ -3,50 +3,34 @@ const utils = require("../utils/speech");
 
 const create = async (req, res) => {
   const payload = req.body;
-  let pastSpeeches;
 
   if (!payload) {
     return res.status(400).json({ message: "no data provided" });
-  } else if (payload.year) {
-    if (!utils.isValidYear(payload.year)) {
-      return res.status(400).json({ message: "invalid year" });
-    }
-  }
-
-  if (payload.year) {
-    try {
-      pastSpeeches = await model.find({ year: payload.year });
-      if (pastSpeeches && pastSpeeches.length > 0) {
-        throw new Error();
-      } else {
-        try {
-          payload["year"] = new Date().getFullYear();
-          const result = await model.create(payload);
-
-          return res
-            .status(201)
-            .json({ message: "created", data: { _id: result.id } });
-        } catch (error) {
-          console.error(error);
-          return res.status(400).json({ message: error.message });
-        }
-      }
-    } catch (error) {
-      return res.status(400).json({
-        message: `can not duplicate years. ${payload.year} already registered.`,
-      });
-    }
   }
 
   try {
-    const result = await model.create(payload);
+    const providedYear = payload.year ? payload.year : new Date().getFullYear();
+    payload["year"] = providedYear;
+    const pastSpeeches = await model.findOne({ year: payload.year });
 
-    return res
-      .status(201)
-      .json({ message: "created", data: { _id: result.id } });
+    if (pastSpeeches && pastSpeeches.year === payload.year) {
+      throw new Error();
+    } else {
+      try {
+        const result = await model.create(payload);
+
+        return res
+          .status(201)
+          .json({ message: "created", data: { _id: result.id } });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: error.message });
+      }
+    }
   } catch (error) {
-    console.error(error);
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({
+      message: `can not duplicate years. ${payload.year} already registered.`,
+    });
   }
 };
 
@@ -59,7 +43,7 @@ const getByYear = async (req, res) => {
 
   try {
     const speech = await model
-      .find({ year: params.year })
+      .findOne({ year: params.year })
       .sort({ createdAt: -1 });
 
     if (!speech) {
@@ -74,7 +58,7 @@ const getByYear = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const speeches = await model.find().sort({ createdAt: -1 });
+    const speeches = await model.find().sort({ createdAt: 1, year: 1 });
 
     return res.status(200).json({ message: "ok", data: speeches });
   } catch (error) {

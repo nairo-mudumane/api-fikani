@@ -38,4 +38,8 @@ const OpeningSpeech = new Schema(
   }
 );
 
-module.exports = mongoose.model("OpeningSpeech", OpeningSpeech);
+module.exports = mongoose.model(
+  "OpeningSpeechModel",
+  OpeningSpeech,
+  "opening-speech"
+);

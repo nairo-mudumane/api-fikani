@@ -8,7 +8,12 @@ async function connectToDatabase() {
   try {
     console.log("connecting to database...");
     return await mongoose
-      .connect(uri, { dbName: dbName, connectTimeoutMS: 12000 })
+      .connect(uri, {
+        dbName: dbName,
+        retryReads: true,
+        retryWrites: true,
+        connectTimeoutMS: 12000,
+      })
       .then((result) => {
         console.log("connected to database");
       });
