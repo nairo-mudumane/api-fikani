@@ -7,9 +7,11 @@ const dbName = process.env.MONGO_DB_NAME;
 async function connectToDatabase() {
   try {
     console.log("connecting to database...");
-    return await mongoose.connect(uri, { dbName: dbName }).then((result) => {
-      console.log("connected to database");
-    });
+    return await mongoose
+      .connect(uri, { dbName: dbName, connectTimeoutMS: 12000 })
+      .then((result) => {
+        console.log("connected to database");
+      });
   } catch (error) {
     console.error(error);
     throw new Error(error.message);

@@ -8,6 +8,8 @@ const PORT = process.env.PORT;
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
+require("./routes")(app);
+
 connectToDatabase().then(() => {
   app.listen(PORT, () => console.log(`running on: http://localhost:${PORT}`));
 });

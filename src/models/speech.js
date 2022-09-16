@@ -19,9 +19,10 @@ const VideoSchema = new Schema({
 
 const OpeningSpeech = new Schema(
   {
-    date: {
-      type: String,
-      required: true,
+    year: {
+      type: Number,
+      required: false,
+      default: new Date().getFullYear(),
     },
     video: {
       type: VideoSchema,
