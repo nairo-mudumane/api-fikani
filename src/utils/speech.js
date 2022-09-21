@@ -7,6 +7,15 @@ function isValidYear(year) {
   return false;
 }
 
+function createYoutubeUrlId(url) {
+  const youTubeRegex =
+    /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+  const matchId = url.match(youTubeRegex);
+  const embedId = matchId && matchId[1];
+  return embedId;
+}
+
 module.exports = {
   isValidYear,
+  createYoutubeUrlId,
 };
