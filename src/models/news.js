@@ -2,6 +2,17 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
+const MediaModel = new Schema({
+  url: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+  },
+});
+
 const NewsModel = new Schema(
   {
     title: {
@@ -12,6 +23,7 @@ const NewsModel = new Schema(
       type: String,
       required: true,
     },
+    media: MediaModel,
   },
   { timestamps: true }
 );
