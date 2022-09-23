@@ -2,6 +2,7 @@ const model = require("../models/news");
 const upload = require("../utils/upload");
 const { formatUrlStr } = require("../utils/url");
 const utils = require("../utils/news");
+const { isEmpty } = require("../utils/empty");
 
 const create = async (req, res) => {
   const payload = req.body;
@@ -50,6 +51,39 @@ const create = async (req, res) => {
   }
 };
 
+const getAll = async (req, res) => {
+  try {
+    const news = await model
+      .find()
+      .sort({ date: -1 })
+      .then((results) => {
+        return results;
+      });
+    return res.status(200).json({ message: "ok", data: news });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const getById = async (req, res) => {
+  const params = req.params;
+  try {
+    const result = await model.findOne({
+      // $or
+    });
+
+    if (isEmpty(result)) {
+      return res.status(404).json({ message: "not found" });
+    }
+
+    return res.status(200).json({ message: "ok", data: result });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   create,
+  getAll,
+  getById,
 };
