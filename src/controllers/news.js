@@ -1,12 +1,13 @@
 const fs = require("fs");
 const model = require("../models/news");
 const upload = require("../utils/upload");
+const { formatUrlStr } = require("../utils/url");
 
 const create = async (req, res) => {
   const payload = req.body;
   const file = req.file;
   const filePath = file.path;
-  const filename = file.filename;
+  const filename = formatUrlStr(payload.title).valid_url;
   let bannerUrl;
 
   try {

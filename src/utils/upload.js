@@ -6,7 +6,7 @@ async function uploadSingleFile(path, filename) {
   try {
     const storage = await mediaStorage.upload(path, {
       public: true,
-      destination: `/uploads/fikani/news/${filename}`,
+      destination: `/news/${filename}`,
       metadata: {
         firebaseStorageDownloadTokens: uidv4(),
       },
