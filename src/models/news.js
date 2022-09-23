@@ -23,6 +23,18 @@ const NewsModel = new Schema(
       type: String,
       required: true,
     },
+    author: {
+      type: String,
+      required: true,
+    },
+    date: {
+      type: Date,
+      required: true,
+    },
+    key: {
+      type: String,
+      required: true,
+    },
     media: MediaModel,
   },
   { timestamps: true }

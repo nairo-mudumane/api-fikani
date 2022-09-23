@@ -1,12 +1,13 @@
 const fs = require("fs");
 
-async function removeFile(path) {
-  try {
-    fs.unlinkSync(path);
-    //file removed
-  } catch (err) {
-    console.error(err);
-  }
+function removeFile(path) {
+  console.log(path);
+  fs.unlink(path, (error) => {
+    if (error) {
+      console.error(error);
+      return;
+    }
+  });
 }
 
 module.exports = removeFile;

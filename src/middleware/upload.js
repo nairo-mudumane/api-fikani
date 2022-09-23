@@ -1,11 +1,14 @@
 const path = require("path");
 const multer = require("multer");
 const { v4: uidv4 } = require("uuid");
-const { mediaStorage } = require("../config/storage");
 const { formatUrlStr } = require("../utils/url");
 
 const fileFilter = (req, file, callback) => {
-  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+  if (
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/svg+xml"
+  ) {
     // accepting file
     callback(null, true);
   } else {

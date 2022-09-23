@@ -2,7 +2,7 @@ const utils = require("../controllers/news");
 const { upload } = require("../middleware/upload");
 
 const NewsRoutes = (app) => {
-  app.post("/news", upload.single("banner"), utils.create);
+  app.post("/news", upload.single("media"), utils.create);
 };
 
 module.exports = {

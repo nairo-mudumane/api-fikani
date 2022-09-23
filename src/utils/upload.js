@@ -4,15 +4,19 @@ const removeFile = require("./fs");
 
 async function uploadSingleFile(path, filename) {
   try {
-    const storage = await mediaStorage.upload(path, {
-      public: true,
-      destination: `/news/${filename}`,
-      metadata: {
-        firebaseStorageDownloadTokens: uidv4(),
-      },
-    });
+    const storage = await mediaStorage
+      .upload(path, {
+        public: true,
+        destination: `/news/${filename}`,
+        metadata: {
+          firebaseStorageDownloadTokens: uidv4(),
+        },
+      })
+      .then((response) => {
+        removeFile(path);
+        return response;
+      });
 
-    removeFile(path);
     return storage[0].metadata.mediaLink;
   } catch (error) {
     console.error(error);
