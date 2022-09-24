@@ -4,6 +4,11 @@ function formatUrlStr(str) {
     const removeWhiteSpacesAndUpperCase = removeAccents
       .replace(/\s/g, "-")
       .toLowerCase();
+    const removeDots = removeWhiteSpacesAndUpperCase
+      .replace(".", "")
+      .replace(",", "")
+      .replace("_", "")
+      .replace("!", "");
 
     const response = {
       valid_url: removeWhiteSpacesAndUpperCase,
