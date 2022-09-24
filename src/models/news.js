@@ -2,22 +2,15 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const MediaModel = new Schema({
-  url: {
-    type: String,
-    required: true,
-  },
-  type: {
-    type: String,
-    required: true,
-  },
-});
-
 const NewsModel = new Schema(
   {
     title: {
       type: String,
       required: true,
+    },
+    short_body: {
+      type: String,
+      required: false,
     },
     body: {
       type: String,
@@ -35,7 +28,30 @@ const NewsModel = new Schema(
       type: String,
       required: true,
     },
-    media: MediaModel,
+    news_url: {
+      type: String,
+      required: true,
+    },
+    keywords: {
+      type: [String],
+      required: false,
+    },
+    language: {
+      type: String,
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+    banner: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

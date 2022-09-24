@@ -33,17 +33,24 @@ function checkNewsFields(news) {
 }
 
 function formatNews(news) {
-  const { title, date } = news;
-  const key = formatUrlStr(title).valid_url;
-  const ISOStringDate = new Date(date).toISOString();
+  try {
+    const { title, date } = news;
+    const key = formatUrlStr(title).valid_url;
+    const ISOStringDate = new Date(date).toISOString();
+    const news_url = `${process.env.BASE_URL}/news/${key}`;
 
-  const response = {
-    ...news,
-    date: ISOStringDate,
-    key,
-  };
+    const response = {
+      ...news,
+      date: ISOStringDate,
+      key,
+      news_url,
+    };
 
-  return response;
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error.message);
+  }
 }
 
 module.exports = {

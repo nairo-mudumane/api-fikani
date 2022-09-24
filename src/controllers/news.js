@@ -59,24 +59,25 @@ const getAll = async (req, res) => {
       .then((results) => {
         return results;
       });
-    return res.status(200).json({ message: "ok", data: news });
+    const totalResults = news.length;
+    return res.status(200).json({ message: "ok", totalResults, data: news });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
-const getById = async (req, res) => {
+const getByKey = async (req, res) => {
   const params = req.params;
   try {
-    const result = await model.findOne({
-      // $or
-    });
+    const result = await model.findOne({ key: params.key });
 
     if (isEmpty(result)) {
       return res.status(404).json({ message: "not found" });
     }
 
-    return res.status(200).json({ message: "ok", data: result });
+    return res
+      .status(200)
+      .json({ message: "ok", totalResults: 1, data: result });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -85,5 +86,5 @@ const getById = async (req, res) => {
 module.exports = {
   create,
   getAll,
-  getById,
+  getByKey,
 };
