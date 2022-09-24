@@ -34,15 +34,17 @@ function checkNewsFields(news) {
 
 function formatNews(news) {
   try {
-    const { title, date } = news;
-    const key = formatUrlStr(title).valid_url;
+    const { title, date, author } = news;
+    const newsKey = formatUrlStr(title).valid_url;
+    const authorKey = formatUrlStr(author).valid_url;
     const ISOStringDate = new Date(date).toISOString();
     const news_url = `${process.env.BASE_URL}/news/${key}`;
 
     const response = {
       ...news,
       date: ISOStringDate,
-      key,
+      key: newsKey,
+      author_key: authorKey,
       news_url,
     };
 

@@ -20,6 +20,10 @@ const NewsModel = new Schema(
       type: String,
       required: true,
     },
+    author_key: {
+      type: String,
+      required: true,
+    },
     date: {
       type: Date,
       required: true,

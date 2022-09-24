@@ -2,7 +2,8 @@ const model = require("../models/news");
 const upload = require("../utils/upload");
 const { formatUrlStr } = require("../utils/url");
 const utils = require("../utils/news");
-const { isEmpty } = require("../utils/empty");
+const { isEmpty, isObjectEmpty } = require("../utils/empty");
+const queryUtils = require("../utils/query");
 
 const create = async (req, res) => {
   const payload = req.body;
@@ -52,22 +53,47 @@ const create = async (req, res) => {
 };
 
 const getAll = async (req, res) => {
-  try {
-    const news = await model
-      .find()
-      .sort({ date: -1 })
-      .then((results) => {
-        return results;
+  // filter: author, date, language, category, country
+  const queryParams = req.query;
+
+  if (isObjectEmpty(queryParams)) {
+    try {
+      const news = await model
+        .find()
+        .sort({ date: -1 })
+        .then((results) => {
+          return results;
+        });
+      const totalResults = news.length;
+      return res.status(200).json({ message: "ok", totalResults, data: news });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  } else {
+    try {
+      const queryFilters = queryUtils.handleQueryKeys(queryParams, {
+        filters: ["category", "author_key"],
       });
-    const totalResults = news.length;
-    return res.status(200).json({ message: "ok", totalResults, data: news });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+
+      const filteredNews = await model
+        .find({ $or: [...queryFilters] })
+        .sort({ date: -1 })
+        .then((results) => {
+          return results;
+        });
+      const totalResults = filteredNews.length;
+      return res
+        .status(200)
+        .json({ message: "ok", totalResults, data: filteredNews });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
   }
 };
 
 const getByKey = async (req, res) => {
   const params = req.params;
+
   try {
     const result = await model.findOne({ key: params.key });
 
