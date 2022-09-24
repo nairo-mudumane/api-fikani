@@ -1,4 +1,4 @@
-const { isEmpty, isObjectEmpty } = require("./empty");
+const { isObjectEmpty } = require("./empty");
 
 function handleQueryKeys(queryObj, options) {
   if (isObjectEmpty(options) || isObjectEmpty(queryObj)) {

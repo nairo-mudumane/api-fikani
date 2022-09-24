@@ -53,7 +53,6 @@ const create = async (req, res) => {
 };
 
 const getAll = async (req, res) => {
-  // filter: author, date, language, category, country
   const queryParams = req.query;
 
   if (isObjectEmpty(queryParams)) {
@@ -93,6 +92,10 @@ const getAll = async (req, res) => {
 
 const getByKey = async (req, res) => {
   const params = req.params;
+
+  if (isEmpty(params.key)) {
+    return res.status(400).json({ message: "parameter 'key' is required" });
+  }
 
   try {
     const result = await model.findOne({ key: params.key });
