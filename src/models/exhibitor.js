@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const ExhibitorProductSchema = require("./product-exhibitor");
 
 const Schema = mongoose.Schema;
 
@@ -42,6 +43,10 @@ const ExhibitorSchema = new Schema(
     },
     contact2: {
       type: String,
+      required: false,
+    },
+    products: {
+      type: ExhibitorProductSchema,
       required: false,
     },
   },
