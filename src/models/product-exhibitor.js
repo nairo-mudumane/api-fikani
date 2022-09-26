@@ -2,20 +2,6 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const ProductCommentsSchema = new Schema(
-  {
-    user_id: {
-      type: String,
-      required: true,
-    },
-    comment: {
-      type: String,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
-
 const ExhibitorProductSchema = new Schema(
   {
     name: {
@@ -40,10 +26,6 @@ const ExhibitorProductSchema = new Schema(
       required: true,
       default: 0,
     },
-    comments: {
-      type: [ProductCommentsSchema],
-      required: false,
-    },
   },
   { timestamps: true }
 );
@@ -51,5 +33,5 @@ const ExhibitorProductSchema = new Schema(
 module.exports = mongoose.model(
   "ExhibitorProductSchema",
   ExhibitorProductSchema,
-  "products"
+  "exhibitor-products"
 );

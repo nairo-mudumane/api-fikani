@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const ExhibitorProductSchema = require("./product-exhibitor");
+const ExhibitorProductSchema = require("./product-exhibitor").schema;
 
 const Schema = mongoose.Schema;
 
@@ -64,10 +64,7 @@ const ExhibitorSchema = new Schema(
       type: String,
       required: false,
     },
-    // products: {
-    //   type: ExhibitorProductSchema,
-    //   required: false,
-    // },
+    products: [ExhibitorProductSchema],
   },
   {
     timestamps: true,
