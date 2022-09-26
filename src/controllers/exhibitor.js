@@ -2,6 +2,7 @@ const model = require("../models/exhibitor");
 const { isObjectEmpty } = require("../utils/empty");
 const utils = require("../utils/exhibitor");
 const passwordUtils = require("../utils/password");
+const queryUtils = require("../utils/query");
 
 const create = async (req, res) => {
   const payload = req.body;
@@ -41,6 +42,24 @@ const getAll = async (req, res) => {
       return res
         .status(200)
         .json({ message: "ok", totalResults, data: noPasswordExhibitors });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  } else {
+    try {
+      const queryFilters = queryUtils.handleQueryKeys(queryParams, {
+        filters: ["category"],
+      });
+
+      const filteredExhibitors = await model
+        .find({ $or: [...queryFilters] })
+        .sort({ createdAt: -1 });
+
+      const totalResults = filteredExhibitors.length;
+
+      return res
+        .status(200)
+        .json({ message: "ok", totalResults, data: filteredExhibitors });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
