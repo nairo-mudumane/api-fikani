@@ -23,7 +23,7 @@ const getAll = async (req, res) => {
     try {
       const exhibitors = await model
         .find()
-        .sort({ date: -1 })
+        .sort({ createdAt: -1 })
         .then((results) => {
           return results;
         });
