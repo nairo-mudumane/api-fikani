@@ -50,5 +50,6 @@ const ExhibitorProductSchema = new Schema(
 
 module.exports = mongoose.model(
   "ExhibitorProductSchema",
-  ExhibitorProductSchema
+  ExhibitorProductSchema,
+  "products"
 );
