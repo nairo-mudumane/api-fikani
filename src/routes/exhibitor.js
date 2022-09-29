@@ -3,7 +3,8 @@ const controller = require("../controllers/exhibitor");
 
 const ExhibitorRoutes = (app) => {
   app.route("/exhibitors").post(controller.create).get(controller.getAll);
-  app.route("/exhibitors/:id").get(controller.getById);
+  app.route("/exhibitor/:id").get(controller.getById);
+  app.get("/exhibitors/search", controller.search);
 };
 
 module.exports = {

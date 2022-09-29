@@ -100,8 +100,99 @@ const getById = async (req, res) => {
   }
 };
 
+const search = async (req, res) => {
+  const queryParams = req.query;
+  const noPasswordExhibitors = [];
+
+  if (isObjectEmpty(queryParams)) {
+    return res
+      .status(400)
+      .json({ message: "params: [name] or [category] are required" });
+  }
+
+  try {
+    const queryFilters = queryUtils.handleQueryKeys(queryParams, {
+      filters: ["category", "name"],
+    });
+
+    const queryNameKey = queryFilters.find((field) => {
+      return Object.keys(field).find((key) => {
+        if (key === "name") {
+          return field[key];
+        }
+      });
+    });
+
+    const queryCategoryKey = queryFilters.find((field) => {
+      return Object.keys(field).find((key) => {
+        if (key === "category") {
+          return field[key];
+        }
+      });
+    });
+
+    if (queryNameKey && queryCategoryKey) {
+      const filteredExhibitors = await model
+        .find({
+          $or: [
+            { name: { $regex: queryNameKey.name, $options: "i" } },
+            { category: { $regex: queryCategoryKey.category, $options: "i" } },
+          ],
+        })
+        .sort({ createdAt: -1 });
+
+      const totalResults = filteredExhibitors.length;
+      filteredExhibitors.map((exhibitor) => {
+        const formatted = passwordUtils.removePasswordField(exhibitor._doc);
+        noPasswordExhibitors.push(formatted);
+      });
+
+      return res
+        .status(200)
+        .json({ message: "ok", totalResults, data: noPasswordExhibitors });
+    } else if (queryNameKey) {
+      const filteredExhibitors = await model
+        .find({
+          $or: [{ name: { $regex: queryNameKey.name, $options: "i" } }],
+        })
+        .sort({ createdAt: -1 });
+
+      const totalResults = filteredExhibitors.length;
+      filteredExhibitors.map((exhibitor) => {
+        const formatted = passwordUtils.removePasswordField(exhibitor._doc);
+        noPasswordExhibitors.push(formatted);
+      });
+
+      return res
+        .status(200)
+        .json({ message: "ok", totalResults, data: noPasswordExhibitors });
+    } else if (queryCategoryKey) {
+      const filteredExhibitors = await model
+        .find({
+          $or: [
+            { category: { $regex: queryCategoryKey.category, $options: "i" } },
+          ],
+        })
+        .sort({ createdAt: -1 });
+
+      const totalResults = filteredExhibitors.length;
+      filteredExhibitors.map((exhibitor) => {
+        const formatted = passwordUtils.removePasswordField(exhibitor._doc);
+        noPasswordExhibitors.push(formatted);
+      });
+
+      return res
+        .status(200)
+        .json({ message: "ok", totalResults, data: noPasswordExhibitors });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  search,
 };
