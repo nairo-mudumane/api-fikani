@@ -2,7 +2,7 @@ const model = require("../models/news");
 const upload = require("../utils/upload");
 const { formatUrlStr } = require("../utils/url");
 const utils = require("../utils/news");
-const { isEmpty, isObjectEmpty } = require("../utils/empty");
+const { isEmpty, isObjectEmpty, isArrayEmpty } = require("../utils/empty");
 const queryUtils = require("../utils/query");
 
 const create = async (req, res) => {
@@ -112,8 +112,95 @@ const getByKey = async (req, res) => {
   }
 };
 
+const search = async (req, res) => {
+  const params = req.params;
+  const queryParams = req.query;
+
+  try {
+    const queryFilters = queryUtils.handleQueryKeys(queryParams, {
+      filters: ["category", "date"],
+    });
+
+    if (isArrayEmpty(queryFilters)) {
+      const filteredNews = await model
+        .find({ title: { $regex: params.title, $options: "i" } })
+        .sort({ date: -1 });
+
+      const totalResults = filteredNews.length;
+
+      return res
+        .status(200)
+        .json({ message: "ok", totalResults, data: filteredNews });
+    }
+
+    const queryCategory = queryFilters.find((field) => {
+      return Object.keys(field).find((key) => {
+        if (key === "category") {
+          return field[key];
+        }
+      });
+    });
+
+    const queryDate = queryFilters.find((field) => {
+      return Object.keys(field).find((key) => {
+        if (key === "date") {
+          return field[key];
+        }
+      });
+    });
+
+    if (queryDate && queryCategory) {
+      const filteredNews = await model
+        .find({
+          $and: [
+            { title: { $regex: params.title, $options: "i" } },
+            { date: { $gte: queryDate.date } },
+            { category: { $regex: queryCategory.category, $options: "i" } },
+          ],
+        })
+        .sort({ createdAt: -1 });
+
+      const totalResults = filteredNews.length;
+      return res
+        .status(200)
+        .json({ message: "ok", totalResults, data: filteredNews });
+    } else if (queryDate) {
+      const filteredNews = await model
+        .find({
+          $and: [
+            { title: { $regex: params.title, $options: "i" } },
+            { date: { $gte: queryDate.date } },
+          ],
+        })
+        .sort({ createdAt: -1 });
+
+      const totalResults = filteredNews.length;
+      return res
+        .status(200)
+        .json({ message: "ok", totalResults, data: filteredNews });
+    } else if (queryCategory) {
+      const filteredNews = await model
+        .find({
+          $and: [
+            { title: { $regex: params.title, $options: "i" } },
+            { category: { $regex: queryCategory.category, $options: "i" } },
+          ],
+        })
+        .sort({ createdAt: -1 });
+
+      const totalResults = filteredNews.length;
+      return res
+        .status(200)
+        .json({ message: "ok", totalResults, data: filteredNews });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   create,
   getAll,
   getByKey,
+  search,
 };
