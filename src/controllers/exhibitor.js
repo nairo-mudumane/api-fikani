@@ -1,5 +1,5 @@
 const model = require("../models/exhibitor");
-const { isObjectEmpty, isEmpty } = require("../utils/empty");
+const { isObjectEmpty, isEmpty, isArrayEmpty } = require("../utils/empty");
 const utils = require("../utils/exhibitor");
 const passwordUtils = require("../utils/password");
 const queryUtils = require("../utils/query");
@@ -101,41 +101,28 @@ const getById = async (req, res) => {
 };
 
 const search = async (req, res) => {
+  const params = req.params;
   const queryParams = req.query;
   const noPasswordExhibitors = [];
 
-  if (isObjectEmpty(queryParams)) {
-    return res
-      .status(400)
-      .json({ message: "params: [name] or [category] are required" });
-  }
-
   try {
     const queryFilters = queryUtils.handleQueryKeys(queryParams, {
-      filters: ["category", "name"],
+      filters: ["category"],
     });
 
-    const queryNameKey = queryFilters.find((field) => {
-      return Object.keys(field).find((key) => {
-        if (key === "name") {
-          return field[key];
-        }
+    if (!isArrayEmpty(queryFilters)) {
+      const queryCategoryKey = queryFilters.find((field) => {
+        return Object.keys(field).find((key) => {
+          if (key === "category") {
+            return field[key];
+          }
+        });
       });
-    });
 
-    const queryCategoryKey = queryFilters.find((field) => {
-      return Object.keys(field).find((key) => {
-        if (key === "category") {
-          return field[key];
-        }
-      });
-    });
-
-    if (queryNameKey && queryCategoryKey) {
       const filteredExhibitors = await model
         .find({
           $or: [
-            { name: { $regex: queryNameKey.name, $options: "i" } },
+            { name: { $regex: params.name, $options: "i" } },
             { category: { $regex: queryCategoryKey.category, $options: "i" } },
           ],
         })
@@ -150,29 +137,9 @@ const search = async (req, res) => {
       return res
         .status(200)
         .json({ message: "ok", totalResults, data: noPasswordExhibitors });
-    } else if (queryNameKey) {
+    } else {
       const filteredExhibitors = await model
-        .find({
-          $or: [{ name: { $regex: queryNameKey.name, $options: "i" } }],
-        })
-        .sort({ createdAt: -1 });
-
-      const totalResults = filteredExhibitors.length;
-      filteredExhibitors.map((exhibitor) => {
-        const formatted = passwordUtils.removePasswordField(exhibitor._doc);
-        noPasswordExhibitors.push(formatted);
-      });
-
-      return res
-        .status(200)
-        .json({ message: "ok", totalResults, data: noPasswordExhibitors });
-    } else if (queryCategoryKey) {
-      const filteredExhibitors = await model
-        .find({
-          $or: [
-            { category: { $regex: queryCategoryKey.category, $options: "i" } },
-          ],
-        })
+        .find({ name: { $regex: params.name, $options: "i" } })
         .sort({ createdAt: -1 });
 
       const totalResults = filteredExhibitors.length;

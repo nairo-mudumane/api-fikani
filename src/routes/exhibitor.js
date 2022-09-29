@@ -4,7 +4,7 @@ const controller = require("../controllers/exhibitor");
 const ExhibitorRoutes = (app) => {
   app.route("/exhibitors").post(controller.create).get(controller.getAll);
   app.route("/exhibitor/:id").get(controller.getById);
-  app.get("/exhibitors/search", controller.search);
+  app.get("/exhibitors/search/:name", controller.search);
 };
 
 module.exports = {
