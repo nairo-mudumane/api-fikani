@@ -118,7 +118,7 @@ const search = async (req, res) => {
 
   try {
     const queryFilters = queryUtils.handleQueryKeys(queryParams, {
-      filters: ["category", "date"],
+      filters: ["category", "date", "author"],
     });
 
     if (isArrayEmpty(queryFilters)) {
@@ -149,13 +149,22 @@ const search = async (req, res) => {
       });
     });
 
-    if (queryDate && queryCategory) {
+    const queryAuthor = queryFilters.find((field) => {
+      return Object.keys(field).find((key) => {
+        if (key === "author") {
+          return field[key];
+        }
+      });
+    });
+
+    if (queryDate && queryCategory && queryAuthor) {
       const filteredNews = await model
         .find({
           $and: [
             { title: { $regex: params.title, $options: "i" } },
             { date: { $gte: queryDate.date } },
             { category: { $regex: queryCategory.category, $options: "i" } },
+            { author: { $regex: queryAuthor.author, $options: "i" } },
           ],
         })
         .sort({ createdAt: -1 });
@@ -184,6 +193,20 @@ const search = async (req, res) => {
           $and: [
             { title: { $regex: params.title, $options: "i" } },
             { category: { $regex: queryCategory.category, $options: "i" } },
+          ],
+        })
+        .sort({ createdAt: -1 });
+
+      const totalResults = filteredNews.length;
+      return res
+        .status(200)
+        .json({ message: "ok", totalResults, data: filteredNews });
+    } else if (queryAuthor) {
+      const filteredNews = await model
+        .find({
+          $and: [
+            { title: { $regex: params.title, $options: "i" } },
+            { author: { $regex: queryAuthor.author, $options: "i" } },
           ],
         })
         .sort({ createdAt: -1 });
