@@ -11,7 +11,7 @@ const ExhibitorSchema = new Schema(
     },
     avatar: {
       type: String,
-      required: true,
+      required: false,
     },
     description: {
       type: String,
@@ -23,12 +23,12 @@ const ExhibitorSchema = new Schema(
     },
     is_active: {
       type: Boolean,
-      required: true,
+      required: false,
       default: false,
     },
     is_buyer: {
       type: Boolean,
-      required: true,
+      required: false,
       default: false,
     },
     video_presentation: {
@@ -39,9 +39,13 @@ const ExhibitorSchema = new Schema(
       type: String,
       required: true,
     },
+    email_optional: {
+      type: String,
+      required: false,
+    },
     email_verified: {
       type: Boolean,
-      required: true,
+      required: false,
       default: false,
     },
     password: {

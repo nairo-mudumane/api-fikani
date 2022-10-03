@@ -2,18 +2,18 @@ const { v4: uidv4 } = require("uuid");
 const { mediaStorage } = require("../config/storage");
 const removeFile = require("./fs");
 
-async function uploadSingleFile(path, filename) {
+async function uploadSingleFile(destination, filepath, filename) {
   try {
     const storage = await mediaStorage
-      .upload(path, {
+      .upload(filepath, {
         public: true,
-        destination: `/news/${filename}`,
+        destination: `/${destination}/${filename}`,
         metadata: {
           firebaseStorageDownloadTokens: uidv4(),
         },
       })
       .then((response) => {
-        removeFile(path);
+        removeFile(filepath);
         return response;
       });
 

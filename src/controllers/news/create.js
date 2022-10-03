@@ -17,7 +17,7 @@ const create = async (req, res) => {
   }
 
   try {
-    bannerUrl = await upload.uploadSingleFile(filePath, filename);
+    bannerUrl = await upload.uploadSingleFile("news", filePath, filename);
   } catch (error) {
     return res.status(500).json({ message: "failed to upload file" });
   }
