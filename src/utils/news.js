@@ -17,10 +17,6 @@ function checkNewsFields(news) {
     errors.push(`author ${msg}`);
   }
 
-  if (isEmpty(news.date)) {
-    errors.push(`date ${msg}`);
-  }
-
   if (isEmpty(news.media)) {
     errors.push(`no media provided or unsupported media`);
   }
@@ -34,11 +30,12 @@ function checkNewsFields(news) {
 
 function formatNews(news) {
   try {
+    const today = new Date().toISOString();
     const { title, date, author } = news;
     const newsKey = formatUrlStr(title).valid_url;
     const authorKey = formatUrlStr(author).valid_url;
-    const ISOStringDate = new Date(date).toISOString();
-    const news_url = `${process.env.BASE_URL}/news/${key}`;
+    const ISOStringDate = date ? new Date(date).toISOString() : today;
+    const news_url = `${process.env.BASE_URL}/news/${newsKey}`;
 
     const response = {
       ...news,

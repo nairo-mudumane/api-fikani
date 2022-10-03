@@ -22,17 +22,16 @@ const create = async (req, res) => {
     return res.status(500).json({ message: "failed to upload file" });
   }
 
-  const data = {
-    ...payload,
-    media: {
-      url: bannerUrl,
-      type: file.mimetype,
-    },
-  };
-
-  const formattedNews = utils.formatNews(data);
-
   try {
+    const data = {
+      ...payload,
+      banner: bannerUrl,
+      media: {
+        url: bannerUrl,
+        type: file.mimetype,
+      },
+    };
+    const formattedNews = utils.formatNews(data);
     const result = await model.create(formattedNews).then((res) => {
       return res;
     });

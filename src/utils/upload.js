@@ -13,6 +13,7 @@ async function uploadSingleFile(destination, filepath, filename) {
         },
       })
       .then((response) => {
+        console.log("filepath: ", filepath);
         removeFile(filepath);
         return response;
       });
