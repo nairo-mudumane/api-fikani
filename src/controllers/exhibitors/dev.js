@@ -1,6 +1,6 @@
-const model = require("../models/exhibitor");
+const model = require("../../models/exhibitor");
 // const { formatUrlStr } = require("../utils/url");
-const utils = require("../utils/exhibitor");
+const utils = require("../../utils/exhibitor");
 
 const postRandomData = async (req, res) => {
   const payload = req.body;

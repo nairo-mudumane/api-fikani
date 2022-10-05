@@ -1,4 +1,5 @@
 const controller = require("../controllers/exhibitors");
+const { postRandomData } = require("../controllers/exhibitors/dev");
 const { upload } = require("../middleware/upload");
 
 const ExhibitorRoutes = (app) => {
@@ -9,6 +10,9 @@ const ExhibitorRoutes = (app) => {
 
   // categories
   app.get("/exhibitors/category", controller.getExhibitorCategory);
+
+  // dev
+  app.post("/exhibitors/dev/new", postRandomData);
 };
 
 module.exports = {
