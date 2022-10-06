@@ -1,3 +1,5 @@
+const { removePasswordField } = require("./password");
+
 function generateAccessKey(length) {
   if (length) {
     let result = "";
@@ -14,6 +16,26 @@ function generateAccessKey(length) {
   }
 }
 
+function removePrivateFields(admin) {
+  if (admin) {
+    const noPassword = removePasswordField(admin);
+    const response = {};
+
+    Object.keys(noPassword).filter((key) => {
+      if (
+        key !== "access_key" &&
+        key !== "login_history" &&
+        key !== "last_login"
+      ) {
+        response[key] = noPassword[key];
+      }
+    });
+
+    return response;
+  }
+}
+
 module.exports = {
   generateAccessKey,
+  removePrivateFields,
 };
