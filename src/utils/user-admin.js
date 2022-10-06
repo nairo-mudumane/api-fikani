@@ -1,4 +1,33 @@
+const { isObjectEmpty, isEmpty } = require("./empty");
 const { removePasswordField } = require("./password");
+const { formatUrlStr } = require("./url");
+
+function checkAdminFields(admin) {
+  const errors = [];
+  const msg = `must not be null`;
+
+  if (isObjectEmpty(admin)) {
+    throw new Error("no payload provided");
+  }
+
+  if (isEmpty(admin.name)) {
+    errors.push(`name ${msg}`);
+  }
+
+  if (isEmpty(admin.email)) {
+    errors.push(`email ${msg}`);
+  }
+
+  if (isEmpty(admin.phone_number)) {
+    errors.push(`phone_number ${msg}`);
+  }
+
+  if (errors.length > 0) {
+    throw new Error(errors.toString());
+  } else {
+    return true;
+  }
+}
 
 function generateAccessKey(length) {
   if (length) {
@@ -35,7 +64,43 @@ function removePrivateFields(admin) {
   }
 }
 
+function formatUserAdmin(admin, options) {
+  const { name } = admin;
+  const access_key = generateAccessKey(6);
+  const url_key = formatUrlStr(name).valid_url;
+  let formatted;
+
+  formatted = {
+    ...admin,
+    url_key,
+    access_key,
+    role: "admin",
+    last_login: null,
+    login_history: null,
+    access_token: null,
+    email_verified: false,
+  };
+
+  if (options && options.role && options.role === 0) {
+    formatted = {
+      ...formatted,
+      role: "super-admin",
+    };
+  }
+
+  if (options && options.role && options.role === 1) {
+    formatted = {
+      ...formatted,
+      role: "admin",
+    };
+  }
+
+  return formatted;
+}
+
 module.exports = {
   generateAccessKey,
   removePrivateFields,
+  formatUserAdmin,
+  checkAdminFields,
 };

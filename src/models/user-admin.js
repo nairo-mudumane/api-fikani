@@ -8,31 +8,62 @@ const UserAdminSchema = new Schema(
       type: String,
       required: true,
     },
+    url_key: {
+      type: String,
+      required: false,
+    },
     access_key: {
       type: String,
-      required: true,
+      required: false,
     },
     access_token: {
       type: String,
       required: false,
     },
-    is_super: {
-      type: Boolean,
+    role: {
+      type: String,
       required: true,
-      default: false,
+      default: "admin",
     },
     last_login: {
       type: String,
-      require: true,
+      require: false,
     },
     email: {
       type: String,
       required: true,
     },
+    email_verified: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     phone_number: {
       type: Number,
       required: true,
     },
+    last_login: {
+      device: {
+        type: String,
+        required: false,
+      },
+      date: {
+        type: Date,
+        required: false,
+      },
+    },
+    login_history: [
+      {
+        device: {
+          type: String,
+          required: false,
+        },
+        date: {
+          type: Date,
+          required: false,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -40,5 +71,5 @@ const UserAdminSchema = new Schema(
 module.exports = mongoose.model(
   "UserAdminSchema",
   UserAdminSchema,
-  "user-admin"
+  "user-admins"
 );

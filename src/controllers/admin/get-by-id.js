@@ -1,4 +1,4 @@
-const model = require("../../models/user-super-admin");
+const model = require("../../models/user-admin");
 const adminUtils = require("../../utils/user-admin");
 const { isValidObjectId } = require("../../utils/mongoose");
 

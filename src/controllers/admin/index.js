@@ -1,5 +1,5 @@
-const { createRootAdmin } = require("./create-super");
-const { getSuperAdminById } = require("./get-super-by-id");
+const { createRootAdmin } = require("./create");
+const { getSuperAdminById } = require("./get-by-id");
 
 module.exports = {
   createRootAdmin,
