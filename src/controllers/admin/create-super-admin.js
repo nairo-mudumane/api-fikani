@@ -6,7 +6,6 @@ const mailer = require("../../services/mailer");
 
 const createSuperAdmin = async (req, res) => {
   const payload = req.body;
-  let prevAdmins;
   let prevSuperAdmin;
   let formattedAdmin;
   let allAdmins;
@@ -22,12 +21,12 @@ const createSuperAdmin = async (req, res) => {
 
   // check if email wasn't taken
   try {
-    prevAdmins = await model.find().then((results) => {
+    allAdmins = await model.find().then((results) => {
       return results;
     });
 
-    if (prevAdmins && prevAdmins.length > 0) {
-      const emailTaken = prevAdmins.find((admin) => {
+    if (allAdmins && allAdmins.length > 0) {
+      const emailTaken = allAdmins.find((admin) => {
         if (admin.email === payload.email) {
           return true;
         }
@@ -43,10 +42,6 @@ const createSuperAdmin = async (req, res) => {
 
   // override existing super admin or create new
   try {
-    allAdmins = await model.find().then((results) => {
-      return results;
-    });
-
     if (allAdmins && allAdmins.length === 0) {
       formattedAdmin = adminUtils.formatUserAdmin(payload, {
         role: 0,
