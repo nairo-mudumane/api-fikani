@@ -1,5 +1,8 @@
 const model = require("../../models/user-admin");
 const adminUtils = require("../../utils/user-admin");
+const ejs = require("ejs");
+const path = require("path");
+const mailer = require("../../services/mailer");
 
 const createSuperAdmin = async (req, res) => {
   const payload = req.body;
@@ -7,6 +10,8 @@ const createSuperAdmin = async (req, res) => {
   let prevSuperAdmin;
   let formattedAdmin;
   let allAdmins;
+  const email = process.env.INFO_EMAIL;
+  const password = `#${process.env.INFO_EMAIL_PASSWORD}`;
 
   // check provided fields
   try {
@@ -46,9 +51,43 @@ const createSuperAdmin = async (req, res) => {
       formattedAdmin = adminUtils.formatUserAdmin(payload, {
         role: 0,
       });
+
+      const htmlData = {
+        name: formattedAdmin.name,
+        access_key: formattedAdmin.access_key,
+      };
+
+      const filename = path.resolve(`welcome-super-admin.ejs`);
+
+      console.info("filename: ", filename);
+      const htmlFile = ejs.renderFile(
+        filename,
+        { data: htmlData },
+        (err, file) => {
+          if (err) {
+            throw new Error(err.message);
+          } else {
+            console.info("file: ", file);
+            return file;
+          }
+        }
+      );
+
+      console.info("htmlFile: ", htmlFile);
+
       const createdAdmin = await model.create(formattedAdmin).then((record) => {
         return record._doc;
       });
+
+      await mailer.sendMailWithHTML(
+        email,
+        password,
+        "FIKANI Account",
+        null,
+        createdAdmin.email,
+        "Welcome to FIKANI",
+        htmlFile
+      );
 
       return res.status(201).json({
         message: "created",
