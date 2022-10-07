@@ -68,31 +68,25 @@ function formatUserAdmin(admin, options) {
   const { name } = admin;
   const access_key = generateAccessKey(6);
   const url_key = formatUrlStr(name).valid_url;
-  let formatted;
 
-  formatted = {
+  let formatted = {
     ...admin,
     url_key,
     access_key,
-    role: "admin",
     last_login: null,
     login_history: null,
     access_token: null,
     email_verified: false,
   };
 
-  if (options && options.role && options.role === 0) {
-    formatted = {
-      ...formatted,
-      role: "super-admin",
-    };
-  }
+  if (!isObjectEmpty(options)) {
+    if (options.role === 0) {
+      formatted["role"] = "super-admin";
+    }
 
-  if (options && options.role && options.role === 1) {
-    formatted = {
-      ...formatted,
-      role: "admin",
-    };
+    if (options.role === 1) {
+      formatted["role"] = "admin";
+    }
   }
 
   return formatted;

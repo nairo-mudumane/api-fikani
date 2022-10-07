@@ -10,7 +10,7 @@ const UserAdminSchema = new Schema(
     },
     url_key: {
       type: String,
-      required: false,
+      required: true,
     },
     access_key: {
       type: String,
@@ -23,7 +23,6 @@ const UserAdminSchema = new Schema(
     role: {
       type: String,
       required: true,
-      default: "admin",
     },
     last_login: {
       type: String,
