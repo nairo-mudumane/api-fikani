@@ -1,4 +1,4 @@
-const { isObjectEmpty, isEmpty } = require("./empty");
+const { isObjectEmpty, isEmpty, isArrayEmpty } = require("./empty");
 const { removePasswordField } = require("./password");
 const { formatUrlStr } = require("./url");
 
@@ -92,9 +92,24 @@ function formatUserAdmin(admin, options) {
   return formatted;
 }
 
+function omitSuperAdmins(admins) {
+  let noSuperAdminUsers = [];
+
+  if (!isArrayEmpty(admins)) {
+    noSuperAdminUsers = admins.filter((admin) => {
+      if (admin.role !== "super-admin") {
+        return admin;
+      }
+    });
+  }
+
+  return noSuperAdminUsers;
+}
+
 module.exports = {
   generateAccessKey,
   removePrivateFields,
   formatUserAdmin,
   checkAdminFields,
+  omitSuperAdmins,
 };
