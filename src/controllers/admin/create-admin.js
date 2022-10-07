@@ -95,7 +95,7 @@ const createUserAdmin = async (req, res) => {
       };
 
       const filename = path.resolve(
-        `src/email-templates/welcome-super-admin/welcome-super-admin.ejs`
+        `src/email-templates/welcome-admin/welcome-admin.ejs`
       );
       const htmlFile = await getEmailTemplate(filename, htmlData);
 
