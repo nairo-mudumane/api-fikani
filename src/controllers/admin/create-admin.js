@@ -1,5 +1,4 @@
 const path = require("path");
-const ejs = require("ejs");
 const model = require("../../models/user-admin");
 const mailer = require("../../services/mailer");
 const adminUtils = require("../../utils/user-admin");
@@ -7,7 +6,6 @@ const { getEmailTemplate } = require("../../services/get-email-template");
 
 const createUserAdmin = async (req, res) => {
   const payload = req.body;
-  let prevSuperAdmin;
   let formattedAdmin;
   let allAdmins;
   const email = process.env.INFO_EMAIL;
