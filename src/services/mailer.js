@@ -26,30 +26,44 @@ async function sendMailWithNoHTML(to, subject, text, cc, alternativeFrom) {
   return await transporter.sendMail(mailOptions);
 }
 
-async function sendMailWithHTML(to, subject, html, cc, alternativeFrom) {
+async function sendMailWithHTML(
+  email,
+  password,
+  serviceName,
+  replayTo,
+  to,
+  subject,
+  html,
+  cc
+) {
   const transporter = nodemailer.createTransport({
-    host: process.env.MAIL_HOST,
-    secureConnection: false,
-    port: process.env.MAIL_PORT,
-    // secure: true,
-    // tls: {
-    //   ciphers: process.env.CIPHERS,
-    // },
+    host: "smtp.zoho.com",
+    port: 465,
+    secure: true, //ssl
     auth: {
-      user: process.env.MAIL_USER,
-      pass: `#${process.env.MAIL_PASS}`,
+      user: email,
+      pass: password,
     },
   });
 
   const mailOptions = {
-    from: alternativeFrom || `OneMedia, SA <${process.env.MAIL_USER}>`,
+    from: `${serviceName} <${email}>`,
+    replayTo: replayTo ? replayTo : `noreplay.${email}`,
     to,
     subject,
     html,
     cc,
   };
 
-  return await transporter.sendMail(mailOptions);
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(info.response);
+      }
+    });
+  });
 }
 
 module.exports = {
