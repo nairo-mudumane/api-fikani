@@ -11,12 +11,13 @@ const getAllAdmins = async (req, res) => {
       return record;
     });
 
-    noSuperAdminUsers = adminUtils.omitSuperAdmins(allAdmins);
-    noSuperAdminUsers.forEach((admin) => {
-      noPasswordAdmins.push(adminUtils.removePrivateFields(admin._doc));
-    });
+    // noSuperAdminUsers = adminUtils.omitSuperAdmins(allAdmins);
+    // noSuperAdminUsers.forEach((admin) => {
+    //   noPasswordAdmins.push(adminUtils.removePrivateFields(admin._doc));
+    // });
 
-    return res.status(200).json({ message: "ok", data: noPasswordAdmins });
+    // return res.status(200).json({ message: "ok", data: noPasswordAdmins });
+    return res.status(200).json({ message: "ok", data: allAdmins });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

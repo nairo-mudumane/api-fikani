@@ -24,10 +24,6 @@ const UserAdminSchema = new Schema(
       type: String,
       required: true,
     },
-    last_login: {
-      type: String,
-      require: false,
-    },
     email: {
       type: String,
       required: true,
@@ -37,6 +33,11 @@ const UserAdminSchema = new Schema(
       required: true,
       default: false,
     },
+    password: {
+      type: String,
+      required: false,
+      select: true,
+    },
     phone_number: {
       type: Number,
       required: true,
@@ -45,10 +46,12 @@ const UserAdminSchema = new Schema(
       device: {
         type: String,
         required: false,
+        select: false,
       },
       date: {
         type: Date,
         required: false,
+        select: false,
       },
     },
     login_history: [
@@ -56,10 +59,12 @@ const UserAdminSchema = new Schema(
         device: {
           type: String,
           required: false,
+          select: false,
         },
         date: {
           type: Date,
           required: false,
+          select: false,
         },
       },
     ],
