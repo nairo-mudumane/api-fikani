@@ -2,7 +2,7 @@ const model = require("../../models/user-admin");
 const bcrypt = require("bcryptjs");
 
 const authenticate = async (request, response) => {
-  const { username, password } = req.body;
+  const { username, password } = request.body;
 
   if (!username || !password) {
     return response

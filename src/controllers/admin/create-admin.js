@@ -65,7 +65,7 @@ const createUserAdmin = async (req, res) => {
         "FIKANI Account",
         null,
         createdAdmin.email,
-        "Welcome to FIKANI",
+        "Welcome to FIKANI - email confirmation",
         htmlFile
       );
 
@@ -107,7 +107,7 @@ const createUserAdmin = async (req, res) => {
         "FIKANI Account",
         false,
         createdAdmin.email,
-        "Welcome to FIKANI",
+        "Welcome to FIKANI - email confirmation",
         htmlFile
       );
 
