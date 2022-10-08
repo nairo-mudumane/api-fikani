@@ -1,4 +1,5 @@
 const { isEmpty, isObjectEmpty } = require("./empty");
+const { formatUrlStr } = require("./url");
 
 const checkExhibitorFields = (exhibitor) => {
   const errors = [];
@@ -35,6 +36,7 @@ const checkExhibitorFields = (exhibitor) => {
 
 const formatExhibitor = (exhibitor) => {
   const {} = exhibitor;
+  const key = formatUrlStr(exhibitor.name).valid_url;
   const is_active = false;
   const is_buyer = false;
   const email_verified = false;
@@ -46,6 +48,7 @@ const formatExhibitor = (exhibitor) => {
     is_buyer,
     video_presentation,
     email_verified,
+    key,
   };
 
   return response;

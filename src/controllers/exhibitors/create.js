@@ -3,9 +3,9 @@ const utils = require("../../utils/exhibitor");
 const { formatUrlStr } = require("../../utils/url");
 const upload = require("../../utils/upload");
 
-const create = async (req, res) => {
-  const payload = req.body;
-  const file = req.file ? req.file : undefined;
+const create = async (request, response) => {
+  const payload = request.body;
+  const file = request.file ? request.file : undefined;
   const filepath = file ? file.path : undefined;
   const filename = formatUrlStr(payload.name).valid_url;
   let avatarUrl;
@@ -22,8 +22,9 @@ const create = async (req, res) => {
         }
         return false;
       });
+
     if (isEmailTaken) {
-      throw new Error(`[${payload.email}] already taken`);
+      throw new Error(`path: email [${payload.email}] already taken`);
     }
   } catch (error) {
     return res.status(400).json({ message: error.message });
