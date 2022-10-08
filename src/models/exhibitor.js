@@ -9,6 +9,10 @@ const ExhibitorSchema = new Schema(
       type: String,
       required: true,
     },
+    key: {
+      type: String,
+      required: true,
+    },
     avatar: {
       type: String,
       required: false,
@@ -51,6 +55,7 @@ const ExhibitorSchema = new Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     website: {
       type: String,
@@ -67,6 +72,11 @@ const ExhibitorSchema = new Schema(
     contact2: {
       type: String,
       required: false,
+    },
+    country: {
+      type: String,
+      required: true,
+      default: "Moçambique",
     },
     products: [ExhibitorProductSchema],
   },
