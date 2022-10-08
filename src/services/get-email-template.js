@@ -12,11 +12,11 @@ async function getEmailTemplate(filename, data) {
     });
   });
 
-  fs.writeFile(`${path.resolve(`${filename}.html`)}`, ejs_html, (err) => {
-    if (err) {
-      throw err;
-    }
-  });
+  // fs.writeFile(`${path.resolve(`${filename}.html`)}`, ejs_html, (err) => {
+  //   if (err) {
+  //     throw err;
+  //   }
+  // });
   // const html_file = fs.readFileSync(`${filename}.html`, "utf-8");
 
   return ejs_html;
