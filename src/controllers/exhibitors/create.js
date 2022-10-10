@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 const path = require("path");
 const { getEmailTemplate } = require("../../services/get-email-template");
 const mailer = require("../../services/mailer");
+const removeFile = require("../../utils/fs");
 
 const create = async (request, response) => {
   const payload = request.body;
@@ -29,6 +30,9 @@ const create = async (request, response) => {
       });
 
     if (isEmailTaken) {
+      if (file) {
+        removeFile(file.path);
+      }
       throw new Error(`path: email [${payload.email}] already taken`);
     }
   } catch (error) {
