@@ -8,6 +8,7 @@ const utils = require("../../utils/user");
 const upload = require("../../utils/upload");
 const { getEmailTemplate } = require("../../services/get-email-template");
 const mailer = require("../../services/mailer");
+const removeFile = require("../../utils/fs");
 
 const create = async (request, response) => {
   const payload = request.body;
