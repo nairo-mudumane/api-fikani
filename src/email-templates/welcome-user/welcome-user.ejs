@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>
+    Welcome - <%-`${firstname} ${lastname}`%>
+  </title>
+
+  <%- include('../styles-global.ejs') %>
+</head>
+
+<body>
+
+  <div class="root-wrapper mx-auto">
+    <h1 class="text-sm">Hello,<span class="mr-1 blue-1">
+        <%-lastname%>
+      </span>
+    </h1>
+    <div class="blue-2 text-lg font-bold">
+      We are happy to have you onboard!
+    </div>
+
+    <div class="mt-10 mx-auto w-max">
+      <a target="_blank" href="http://accounts.fikani.com/login?access_key=CgVdl2">
+        <button class="btn mt-2 white-1 bg-blue-1 rounded-lg py-3 px-6 uppercase text-lg font-bold">
+          Confirm email
+        </button>
+      </a>
+    </div>
+
+    <div class="mt-10">
+      <p>
+        Please confirm that you signed up with <%-email%>. Some features of the platform may be limited until you do.
+      </p>
+    </div>
+
+    <div class="my-6 text-sm">
+      <p>
+        In case you need further assistance, write to us on
+      </p>
+      <a class="text-[#387ebf]" href="mailto:support@fikani.com">support@fikani.com</a>
+    </div>
+
+    <div class="text-sm">Thank you, <span class="font-semibold">FIKANI Digital</span>.</div>
+  </div>
+
+</body>
+
+</html>

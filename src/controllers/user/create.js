@@ -1,10 +1,13 @@
 const bcrypt = require("bcryptjs");
+const path = require("path");
 const model = require("../../models/user");
 const modelExhibitor = require("../../models/exhibitor");
 const modelUserAdmin = require("../../models/user-admin");
 const { formatUrlStr } = require("../../utils/url");
 const utils = require("../../utils/user");
 const upload = require("../../utils/upload");
+const { getEmailTemplate } = require("../../services/get-email-template");
+const mailer = require("../../services/mailer");
 
 const create = async (request, response) => {
   const payload = request.body;
@@ -13,6 +16,8 @@ const create = async (request, response) => {
   const filename = formatUrlStr(
     `${payload.firstname}_${payload.lastname}`
   ).valid_url;
+  const email = process.env.INFO_EMAIL;
+  const password = "#O" + process.env.INFO_EMAIL_PASSWORD.toString();
   let avatarUrl;
   let formattedUser;
 
@@ -27,25 +32,23 @@ const create = async (request, response) => {
         return false;
       });
 
-    const exhibitor = false;
-    const userAdmin = false;
-    // const exhibitor = await modelExhibitor
-    //   .findOne({ email: payload.email })
-    //   .then((result) => {
-    //     if (result && result.email) {
-    //       return true;
-    //     }
-    //     return false;
-    //   });
+    const exhibitor = await modelExhibitor
+      .findOne({ email: payload.email })
+      .then((result) => {
+        if (result && result.email) {
+          return true;
+        }
+        return false;
+      });
 
-    // const userAdmin = await modelUserAdmin
-    //   .findOne({ email: payload.email })
-    //   .then((result) => {
-    //     if (result && result.email) {
-    //       return true;
-    //     }
-    //     return false;
-    //   });
+    const userAdmin = await modelUserAdmin
+      .findOne({ email: payload.email })
+      .then((result) => {
+        if (result && result.email) {
+          return true;
+        }
+        return false;
+      });
 
     if (user || exhibitor || userAdmin) {
       if (file) {
@@ -80,7 +83,26 @@ const create = async (request, response) => {
       return result._doc;
     });
 
-    // todo: send email
+    const html_data = {
+      firstname: formattedUser.firstname,
+      lastname: formattedUser.lastname,
+      email: formattedUser.email,
+    };
+
+    const ejs_file = path.resolve(
+      "src/email-templates/welcome-user/welcome-user.ejs"
+    );
+    const html_file = await getEmailTemplate(ejs_file, html_data);
+
+    await mailer.sendMailWithHTML(
+      email,
+      password,
+      `FIKANI Account`,
+      false,
+      createdUser.email,
+      `[FIKANI]: Welcome ${formattedUser.firstname} ${formattedUser.lastname}`,
+      html_file
+    );
 
     return response.status(201).json({
       message: "created",
