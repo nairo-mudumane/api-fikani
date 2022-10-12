@@ -29,7 +29,7 @@ const userAuthenticate = async (request, response) => {
         }
       });
     if (!user) {
-      return response.status(400).json({ message: "user not found" });
+      return response.status(404).json({ message: "user not found" });
     }
   } catch (error) {
     return response.status(500).json({ message: error.message });
