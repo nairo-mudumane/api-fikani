@@ -4,6 +4,7 @@ const { ExhibitorRoutes } = require("./exhibitor");
 const { NewsRoutes } = require("./news");
 const { OpeningSpeechRoutes } = require("./speech");
 const { UserRoutes } = require("./user");
+const { authenticateRoutes } = require("./authenticate");
 
 module.exports = (app) => {
   OpeningSpeechRoutes(app);
@@ -11,5 +12,6 @@ module.exports = (app) => {
   ExhibitorRoutes(app);
   AdminRoutes(app);
   UserRoutes(app);
+  authenticateRoutes(app);
   NotFound(app);
 };
