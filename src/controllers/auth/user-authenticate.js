@@ -55,9 +55,13 @@ const userAuthenticate = async (request, response) => {
     } else {
       user = removePrivateFields(user);
 
-      const token = jwt.sign({ _id: user._id }, authConfig.user_secret, {
-        expiresIn: 86400,
-      });
+      const token = jwt.sign(
+        { _id: user._id, key: user.key },
+        authConfig.user_secret,
+        {
+          expiresIn: 86400,
+        }
+      );
 
       const email_data = {
         device,
