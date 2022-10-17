@@ -4,11 +4,21 @@ const jwt = require("jsonwebtoken");
 const authConfig = require("../../config/auth.json");
 const newLoginEmailAlert = require("./new-login-email-alert");
 const { removePrivateFields } = require("../../utils/user-admin");
+const DeviceDetector = require("node-device-detector");
 
 const userAuthenticate = async (request, response) => {
+  const userAgent = request.get("User-Agent");
+  const deviceDetector = new DeviceDetector({
+    clientIndexes: true,
+    deviceIndexes: true,
+    deviceAliasCode: false,
+  });
+
+  const detector = deviceDetector.detect(userAgent);
+
   const device = {
-    type: request.device.type,
-    name: request.device.name,
+    type: detector.device.type,
+    name: detector.os.name,
   };
   const { username, password } = request.body;
   let user = undefined;
