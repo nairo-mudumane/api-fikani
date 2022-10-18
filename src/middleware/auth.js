@@ -25,7 +25,6 @@ function userAuthMiddleware(request, response, next) {
       return response.status(401).json({ message: err.message });
     }
 
-    console.log("decoded: ", decoded);
     request.user = {
       ...decoded,
     };

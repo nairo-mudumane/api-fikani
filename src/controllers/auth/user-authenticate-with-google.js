@@ -6,8 +6,8 @@ const { removePrivateFields } = require("../../utils/user-admin");
 
 async function authenticateWithGoogle(request, response) {
   let user;
-  const { username } = request.body;
   const { device } = request;
+  const { username } = request.body;
 
   try {
     user = await model
@@ -28,21 +28,16 @@ async function authenticateWithGoogle(request, response) {
 
   try {
     const last_login = {
-      device: `${device.type}|${device.name}`,
+      device: `${device.type ?? "unknown"}|${device.name ?? "unknown"}`,
       date: new Date(),
     };
+
     await model.findOneAndUpdate(
       { email: username },
       {
         ...user,
         last_login,
-        login_history: [
-          ...user.login_history,
-          {
-            device: `${device.type} - ${device.name}`,
-            date: new Date(),
-          },
-        ],
+        login_history: [...user.login_history, last_login],
       }
     );
 

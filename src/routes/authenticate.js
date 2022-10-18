@@ -1,7 +1,8 @@
 const userController = require("../controllers/auth");
+const { detectDeviceInformation } = require("../middleware/device");
 
 const authenticateRoutes = (app) => {
-  app.post("/login", userController.userAuthenticate);
+  app.post("/login", detectDeviceInformation, userController.userAuthenticate);
 };
 
 module.exports = { authenticateRoutes };

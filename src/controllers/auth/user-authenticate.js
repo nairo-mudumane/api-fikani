@@ -4,26 +4,13 @@ const jwt = require("jsonwebtoken");
 const authConfig = require("../../config/auth.json");
 const newLoginEmailAlert = require("../../services/new-login-email-alert");
 const { removePrivateFields } = require("../../utils/user-admin");
-const DeviceDetector = require("node-device-detector");
 const { authenticateWithGoogle } = require("./user-authenticate-with-google");
 const { isObjectEmpty } = require("../../utils/empty");
 const queryUtils = require("../../utils/query");
 
 const userAuthenticate = async (request, response) => {
   const queryParams = request.query;
-  const userAgent = request.get("User-Agent");
-  const deviceDetector = new DeviceDetector({
-    clientIndexes: true,
-    deviceIndexes: true,
-    deviceAliasCode: false,
-  });
-
-  const detector = deviceDetector.detect(userAgent);
-
-  const device = {
-    type: detector.device.type,
-    name: detector.os.name,
-  };
+  const device = request.device;
 
   if (isObjectEmpty(queryParams)) {
     const { username, password } = request.body;
@@ -129,7 +116,7 @@ const userAuthenticate = async (request, response) => {
     });
 
     if (typeGoogle) {
-      return authenticateWithGoogle({ ...request, device }, response);
+      return authenticateWithGoogle(request, response);
     }
   } catch (error) {
     return response.status(500).json({ message: error.message });
