@@ -7,15 +7,16 @@ function isStringEmpty(value) {
 }
 
 function isObjectEmpty(value) {
-  if (
-    Object.keys(value) &&
-    Object.keys(value).length === 0 &&
-    value.constructor === Object
-  ) {
-    return true;
-  } else {
-    return false;
+  if (value) {
+    if (
+      Object.keys(value) &&
+      Object.keys(value).length === 0 &&
+      value.constructor === Object
+    ) {
+      return true;
+    }
   }
+  return false;
 }
 
 function isArrayEmpty(value) {

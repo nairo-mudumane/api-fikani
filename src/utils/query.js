@@ -12,7 +12,7 @@ function handleQueryKeys(queryObj, options) {
       Object.keys(queryObj).map((key) => {
         if (options.filters.includes(key)) {
           results.push({
-            [key]: queryObj[key],
+            [key]: queryObj[key].toLowerCase(),
           });
         } else {
           errors.push(key.toString());
@@ -21,7 +21,7 @@ function handleQueryKeys(queryObj, options) {
     }
 
     if (errors.length > 0) {
-      throw new Error(`filters: [${errors.toString()}] ${errorMsg}`);
+      throw new Error(`query: [${errors.toString()}] ${errorMsg}`);
     }
 
     return results;

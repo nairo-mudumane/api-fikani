@@ -1,7 +1,7 @@
 const { isObjectEmpty, isEmpty } = require("./empty");
 const { formatUrlStr } = require("./url");
 
-function checkUserFields(user) {
+function checkUserFields(user, passwordNullable) {
   const errors = [];
   const msg = `must not be null`;
 
@@ -21,8 +21,10 @@ function checkUserFields(user) {
     errors.push(`email ${msg}`);
   }
 
-  if (isEmpty(user.password)) {
-    errors.push(`password ${msg}`);
+  if (!passwordNullable) {
+    if (isEmpty(user.password)) {
+      errors.push(`password ${msg}`);
+    }
   }
 
   if (errors.length > 0) {

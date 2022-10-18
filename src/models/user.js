@@ -39,8 +39,12 @@ const UserSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
       select: false,
+    },
+    googleId: {
+      type: String,
+      required: false,
     },
     last_login: {
       device: {
