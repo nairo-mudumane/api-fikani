@@ -3,31 +3,21 @@ const jwt = require("jsonwebtoken");
 const authConfig = require("../../config/auth.json");
 const newLoginEmailAlert = require("../../services/new-login-email-alert");
 const { removePrivateFields } = require("../../utils/user-admin");
-const DeviceDetector = require("node-device-detector");
 
 async function authenticateWithGoogle(request, response) {
   let user;
   const { username } = request.body;
-  const userAgent = request.get("User-Agent");
-  const deviceDetector = new DeviceDetector({
-    clientIndexes: true,
-    deviceIndexes: true,
-    deviceAliasCode: false,
-  });
-
-  const detector = deviceDetector.detect(userAgent);
-
-  const device = {
-    type: detector.device.type,
-    name: detector.os.name,
-  };
+  const { device } = request;
 
   try {
-    user = await model.findOne({ email: username }).then((result) => {
-      if (result) {
-        return result._doc;
-      }
-    });
+    user = await model
+      .findOne({ email: username })
+      .select("+password +login_history +last_login")
+      .then((result) => {
+        if (result) {
+          return result._doc;
+        }
+      });
 
     if (!user) {
       return response.status(404).json({ message: "user not found" });
@@ -37,6 +27,25 @@ async function authenticateWithGoogle(request, response) {
   }
 
   try {
+    const last_login = {
+      device: `${device.type}|${device.name}`,
+      date: new Date(),
+    };
+    await model.findOneAndUpdate(
+      { email: username },
+      {
+        ...user,
+        last_login,
+        login_history: [
+          ...user.login_history,
+          {
+            device: `${device.type} - ${device.name}`,
+            date: new Date(),
+          },
+        ],
+      }
+    );
+
     user = removePrivateFields(user);
 
     const token = jwt.sign(

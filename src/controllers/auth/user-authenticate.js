@@ -38,12 +38,13 @@ const userAuthenticate = async (request, response) => {
     try {
       user = await model
         .findOne({ email: username })
-        .select("+password")
+        .select("+password login_history last_login")
         .then((result) => {
           if (result) {
             return result._doc;
           }
         });
+
       if (!user) {
         return response.status(404).json({ message: "user not found" });
       }
@@ -59,8 +60,6 @@ const userAuthenticate = async (request, response) => {
           .status(400)
           .json({ message: "username or password invalid" });
       } else {
-        user = removePrivateFields(user);
-
         const token = jwt.sign(
           { _id: user._id, key: user.key },
           authConfig.user_secret,
@@ -75,6 +74,27 @@ const userAuthenticate = async (request, response) => {
           lastname: user.lastname,
           email: user.email,
         };
+
+        await model.findOneAndUpdate(
+          { email: username },
+          {
+            $set: {
+              last_login: {
+                device: `${device.type}|${device.name}`,
+                date: new Date(),
+              },
+              login_history: [
+                ...user.login_history,
+                {
+                  device: `${device.type} - ${device.name}`,
+                  date: new Date(),
+                },
+              ],
+            },
+          }
+        );
+
+        user = removePrivateFields(user);
 
         await newLoginEmailAlert("user", email_data);
 
@@ -109,7 +129,7 @@ const userAuthenticate = async (request, response) => {
     });
 
     if (typeGoogle) {
-      return authenticateWithGoogle(request, response);
+      return authenticateWithGoogle({ ...request, device }, response);
     }
   } catch (error) {
     return response.status(500).json({ message: error.message });
