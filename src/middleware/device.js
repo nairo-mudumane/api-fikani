@@ -11,8 +11,8 @@ function detectDeviceInformation(request, response, next) {
   const detector = deviceDetector.detect(userAgent);
 
   const device = {
-    type: detector.device.type,
-    name: detector.os.name,
+    type: detector.device.type ? detector.device.type : "unknown device type",
+    name: detector.os.name ? detector.os.name : "unknown device name",
   };
 
   request.device = device;

@@ -28,7 +28,7 @@ async function authenticateWithGoogle(request, response) {
 
   try {
     const last_login = {
-      device: `${device.type ?? "unknown"}|${device.name ?? "unknown"}`,
+      device: `${device.type}|${device.name}`,
       date: new Date(),
     };
 
