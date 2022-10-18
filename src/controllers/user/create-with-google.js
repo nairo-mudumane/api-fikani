@@ -1,6 +1,7 @@
 const model = require("../../models/user");
 const modelExhibitor = require("../../models/exhibitor");
 const modelUserAdmin = require("../../models/user-admin");
+const path = require("path");
 const jwt = require("jsonwebtoken");
 const DeviceDetector = require("node-device-detector");
 const newLoginEmailAlert = require("../../services/new-login-email-alert");
@@ -111,7 +112,7 @@ const CreateWithGoogle = async (request, response) => {
       html_file
     );
 
-    await newLoginEmailAlert("user", email_data);
+    await newLoginEmailAlert("user", html_data);
 
     return response.status(201).json({
       message: "created",
