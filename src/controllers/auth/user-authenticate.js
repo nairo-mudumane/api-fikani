@@ -2,7 +2,7 @@ const model = require("../../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const authConfig = require("../../config/auth.json");
-const newLoginEmailAlert = require("./new-login-email-alert");
+const newLoginEmailAlert = require("../../services/new-login-email-alert");
 const { removePrivateFields } = require("../../utils/user-admin");
 const DeviceDetector = require("node-device-detector");
 

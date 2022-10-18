@@ -11,6 +11,7 @@ const mailer = require("../../services/mailer");
 const removeFile = require("../../utils/fs");
 const { isObjectEmpty } = require("../../utils/empty");
 const queryUtils = require("../../utils/query");
+const { CreateWithGoogle } = require("./create-with-google");
 
 const create = async (request, response) => {
   const queryParams = request.query;
@@ -123,34 +124,11 @@ const create = async (request, response) => {
     }
   }
 
+  /**
+   * with query params
+   */
+
   try {
-    const user = await model
-      .findOne({ email: payload.email })
-      .then((result) => {
-        if (result && result.email) {
-          return true;
-        }
-        return false;
-      });
-
-    const exhibitor = await modelExhibitor
-      .findOne({ email: payload.email })
-      .then((result) => {
-        if (result && result.email) {
-          return true;
-        }
-        return false;
-      });
-
-    const userAdmin = await modelUserAdmin
-      .findOne({ email: payload.email })
-      .then((result) => {
-        if (result && result.email) {
-          return true;
-        }
-        return false;
-      });
-
     const queryFilters = queryUtils.handleQueryKeys(queryParams, {
       filters: ["type"],
     });
@@ -164,52 +142,7 @@ const create = async (request, response) => {
     });
 
     if (typeGoogle) {
-      try {
-        utils.checkUserFields(payload, true);
-
-        if (user || exhibitor || userAdmin) {
-          if (file) {
-            removeFile(file.path);
-          }
-
-          throw new Error(`path: email [${payload.email}] already taken`);
-        }
-      } catch (error) {
-        return response.status(400).json({ message: error.message });
-      }
-
-      try {
-        formattedUser = utils.formatUser(payload);
-        formattedUser["email_verified"] = true;
-
-        const createdUser = await model.create(formattedUser).then((result) => {
-          return result._doc;
-        });
-
-        const html_data = {
-          firstname: formattedUser.firstname,
-          lastname: formattedUser.lastname,
-          email: formattedUser.email,
-        };
-
-        const ejs_file = path.resolve(
-          "src/email-templates/welcome-user/welcome-user-social-media.ejs"
-        );
-        const html_file = await getEmailTemplate(ejs_file, html_data);
-
-        await mailer.sendMailWithHTML(
-          email,
-          password,
-          `FIKANI Account`,
-          false,
-          createdUser.email,
-          `[FIKANI]: Welcome ${formattedUser.firstname} ${formattedUser.lastname}`,
-          html_file
-        );
-        return response.json({ createdUser });
-      } catch (error) {
-        return response.status(500).json({ message: error.message });
-      }
+      return CreateWithGoogle(request, response);
     }
   } catch (error) {
     return response.status(500).json({ message: error.message });

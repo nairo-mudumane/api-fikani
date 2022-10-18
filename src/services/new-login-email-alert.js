@@ -1,6 +1,6 @@
 const path = require("path");
-const mailer = require("../../services/mailer");
-const { getEmailTemplate } = require("../../services/get-email-template");
+const mailer = require("./mailer");
+const { getEmailTemplate } = require("./get-email-template");
 
 async function newLoginEmailAlert(type, data) {
   const email = process.env.INFO_EMAIL;
