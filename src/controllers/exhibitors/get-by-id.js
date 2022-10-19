@@ -1,33 +1,52 @@
 const model = require("../../models/exhibitor");
-const { isObjectEmpty, isEmpty } = require("../../utils/empty");
-const passwordUtils = require("../../utils/password");
+const { isEmpty } = require("../../utils/empty");
 const dbUtils = require("../../utils/mongoose");
 
-const getById = async (req, res) => {
-  const params = req.params;
+const getById = async (request, response) => {
+  const params = request.params;
+  let exhibitor;
 
   if (isEmpty(params.id)) {
-    return res.status(400).json({ message: "parameter 'id' is required" });
-  }
-
-  if (!dbUtils.isValidObjectId(params.id)) {
-    return res.status(400).json({ message: "invalid objectId format" });
+    return res
+      .status(400)
+      .json({ message: "parameter 'id' or 'key' is required" });
   }
 
   try {
-    const result = await model.findById(params.id);
-
-    if (isObjectEmpty(result)) {
-      return res.status(404).json({ message: "not found" });
+    if (dbUtils.isValidObjectId(params.id)) {
+      exhibitor = await model
+        .findOne({
+          _id: params.id,
+        })
+        .then((result) => {
+          if (result) {
+            return result._doc;
+          }
+          return null;
+        });
+    } else {
+      exhibitor = await model
+        .findOne({
+          key: params.id,
+        })
+        .then((result) => {
+          if (result) {
+            return result._doc;
+          }
+          return null;
+        });
     }
 
-    const noPasswordExhibitor = passwordUtils.removePasswordField(result._doc);
+    if (!exhibitor || !exhibitor._id) {
+      return response.status(404).json({ message: "not found" });
+    }
 
-    return res
+    exhibitor.products = undefined;
+    return response
       .status(200)
-      .json({ message: "ok", totalResults: 1, data: noPasswordExhibitor });
+      .json({ message: "ok", totalResults: 1, data: exhibitor });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return response.status(500).json({ message: error.message });
   }
 };
 

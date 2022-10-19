@@ -3,6 +3,7 @@ const getAll = require("./get-all");
 const create = require("./create");
 const getById = require("./get-by-id");
 const { getExhibitorCategory } = require("./category");
+const { postRandomData } = require("./dev");
 
 module.exports = {
   search,
@@ -10,4 +11,5 @@ module.exports = {
   create,
   getById,
   getExhibitorCategory,
+  postRandomData,
 };

@@ -7,13 +7,14 @@ const postRandomData = async (req, res) => {
   const formatted = [];
 
   payload.forEach((data) => {
+    // data.category = "gastronomy";
     formatted.push(utils.formatExhibitor(data));
   });
 
   try {
     const results = await model.insertMany(formatted);
     const totalResults = results.length;
-    return res.status(202).json({ totalResults, message: "created" });
+    return res.status(201).json({ totalResults, message: "created" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
