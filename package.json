@@ -9,9 +9,9 @@
     "url": "https://github.com/ONE-MEDIA-SA/api-mongo-fikani/issues"
   },
   "engines": {
-    "node": ">=17.1.0",
+    "node": ">=16.18.0",
     "yarn": ">=1.22.18",
-    "npm": ">=8.1.4"
+    "npm": ">=8.19.2"
   },
   "repository": {
     "directory": "https://github.com/ONE-MEDIA-SA/api-mongo-fikani",
