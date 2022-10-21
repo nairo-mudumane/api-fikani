@@ -12,7 +12,7 @@ async function authenticateWithGoogle(request, response) {
   try {
     user = await model
       .findOne({ email: username })
-      .select("+password +login_history +last_login")
+      .select("+login_history +last_login")
       .then((result) => {
         if (result) {
           return result._doc;
