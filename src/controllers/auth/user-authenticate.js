@@ -62,7 +62,7 @@ const userAuthenticate = async (request, response) => {
           email: user.email,
         };
 
-        await model.findOneAndUpdate(
+        model.findOneAndUpdate(
           { email: username },
           {
             $set: {
@@ -83,7 +83,7 @@ const userAuthenticate = async (request, response) => {
 
         user = removePrivateFields(user);
 
-        await newLoginEmailAlert("user", email_data);
+        newLoginEmailAlert("user", email_data);
 
         return response.status(200).json({
           message: "ok",

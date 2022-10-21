@@ -32,7 +32,7 @@ async function authenticateWithGoogle(request, response) {
       date: new Date(),
     };
 
-    await model.findOneAndUpdate(
+    model.findOneAndUpdate(
       { email: username },
       {
         ...user,
@@ -58,7 +58,7 @@ async function authenticateWithGoogle(request, response) {
       email: user.email,
     };
 
-    await newLoginEmailAlert("user", email_data);
+    newLoginEmailAlert("user", email_data);
 
     return response.status(200).json({
       message: "ok",
