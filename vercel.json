@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "buildCommand": "vercel build",
+  "cleanUrls": true,
+  "outputDirectory": "/",
   "builds": [
     {
       "src": "./src/index.js",
