@@ -4,6 +4,7 @@ const create = require("./create");
 const getById = require("./get-by-id");
 const { getExhibitorCategory } = require("./category");
 const { postRandomData } = require("./dev");
+const { verifyEmail } = require("./verify-email");
 
 module.exports = {
   search,
@@ -12,4 +13,5 @@ module.exports = {
   getById,
   getExhibitorCategory,
   postRandomData,
+  verifyEmail,
 };

@@ -7,6 +7,7 @@ const path = require("path");
 const { getEmailTemplate } = require("../../services/get-email-template");
 const mailer = require("../../services/mailer");
 const removeFile = require("../../utils/fs");
+const crypto = require("crypto");
 
 const create = async (request, response) => {
   const payload = request.body;
@@ -63,6 +64,12 @@ const create = async (request, response) => {
     const hashedPassword = await bcrypt.hash(formattedExhibitor.password, 10);
     formattedExhibitor.password = hashedPassword;
 
+    const email_token = crypto.randomBytes(50).toString("hex");
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    formattedExhibitor.email_token = email_token;
+    formattedExhibitor.email_token_expires = now;
+
     const createdExhibitor = await model
       .create(formattedExhibitor)
       .then((result) => {
@@ -73,6 +80,7 @@ const create = async (request, response) => {
       name: formattedExhibitor.name,
       email: formattedExhibitor.email,
       key: formattedExhibitor.key,
+      email_token,
     };
     const ejs_file = path.resolve(
       "src/email-templates/welcome-exhibitor/welcome-exhibitor.ejs"

@@ -79,6 +79,20 @@ const ExhibitorSchema = new Schema(
       required: true,
       default: "Moçambique",
     },
+    token: {
+      type: String,
+      required: false,
+    },
+    email_token: {
+      type: String,
+      required: false,
+      select: false,
+    },
+    email_token_expires: {
+      type: Date,
+      required: false,
+      select: false,
+    },
     products: [ExhibitorProductSchema],
   },
   {

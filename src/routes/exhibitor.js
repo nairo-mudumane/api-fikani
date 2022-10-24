@@ -7,6 +7,7 @@ const ExhibitorRoutes = (app) => {
   app.get("/exhibitors", controller.getAll);
   app.route("/exhibitor/:id").get(controller.getById);
   app.get("/exhibitors/search/:name", controller.search);
+  app.post("/exhibitors/confirm-email", controller.verifyEmail);
 
   // categories
   app.get("/exhibitors/category", controller.getExhibitorCategory);
