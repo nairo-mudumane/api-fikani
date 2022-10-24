@@ -79,7 +79,7 @@ const create = async (request, response) => {
     );
     const html_file = await getEmailTemplate(ejs_file, html_data);
 
-    await mailer.sendMailWithHTML(
+    mailer.sendMailWithHTML(
       email,
       password,
       "FIKANI Account",
