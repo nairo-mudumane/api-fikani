@@ -93,6 +93,32 @@ const ExhibitorSchema = new Schema(
       required: false,
       select: false,
     },
+    last_login: {
+      device: {
+        type: String,
+        required: false,
+        select: false,
+      },
+      date: {
+        type: Date,
+        required: false,
+        select: false,
+      },
+    },
+    login_history: [
+      {
+        device: {
+          type: String,
+          required: false,
+          select: false,
+        },
+        date: {
+          type: Date,
+          required: false,
+          select: false,
+        },
+      },
+    ],
     products: [ExhibitorProductSchema],
   },
   {

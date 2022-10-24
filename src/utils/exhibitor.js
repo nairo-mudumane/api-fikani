@@ -35,7 +35,8 @@ const checkExhibitorFields = (exhibitor) => {
 };
 
 const formatExhibitor = (exhibitor) => {
-  const {} = exhibitor;
+  const { firstname, lastname } = exhibitor;
+  const fullname = `${firstname} ${lastname}`;
   const key = formatUrlStr(exhibitor.name).valid_url;
   const is_active = false;
   const is_buyer = false;
@@ -44,6 +45,7 @@ const formatExhibitor = (exhibitor) => {
 
   const response = {
     ...exhibitor,
+    fullname,
     is_active,
     is_buyer,
     video_presentation,
