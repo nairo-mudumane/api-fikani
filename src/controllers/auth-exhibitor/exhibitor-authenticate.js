@@ -54,7 +54,7 @@ const exhibitorAuthenticate = async (request, response) => {
           { _id: exhibitor._id, key: exhibitor.key },
           authConfig.exhibitor_secret,
           {
-            expiresIn: 86400,
+            expiresIn: 86400, // 24h
           }
         );
 
@@ -107,13 +107,47 @@ const exhibitorAuthenticate = async (request, response) => {
 
   try {
     const queryFilters = queryUtils.handleQueryKeys(queryParams, {
-      filters: ["type"],
+      filters: [],
     });
   } catch (error) {
     return response.status(500).json({ message: error.message });
   }
 };
 
+const refreshExhibitor = async (request, response) => {
+  const { user } = request;
+
+  if (!user) {
+    return response.status(401).json({ message: "unauthorized" });
+  }
+
+  try {
+    let exhibitor = await model
+      .findById(user._id)
+      .then((doc) => {
+        if (!doc) return undefined;
+        return doc._doc;
+      })
+      .catch((err) => {
+        if (err) {
+          throw err;
+        }
+      });
+
+    exhibitor = removePrivateFields(exhibitor);
+
+    if (!exhibitor) {
+      return response.status(401).json({ message: "not found" });
+    }
+
+    return response.status(200).json({ message: "ok", data: exhibitor });
+  } catch (error) {
+    console.log("error: ", error);
+    return response.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   exhibitorAuthenticate,
+  refreshExhibitor,
 };
